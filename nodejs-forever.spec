@@ -2,24 +2,27 @@
 Summary:	node.js forever module and CLI tools
 Name:		nodejs-%{pkg}
 Version:	0.9.2
-Release:	0.6
+Release:	0.8
 License:	MIT
 Group:		Development/Libraries
 URL:		https://github.com/nodejitsu/forever
 Source0:	http://registry.npmjs.org/forever/-/%{pkg}-%{version}.tgz
 # Source0-md5:	204b32de54867b91183293e537dfbfa9
+BuildRequires:	nodejs-daemon >= 0.5
+BuildRequires:	nodejs-microtime >= 0.2
+BuildRequires:	nodejs-node-fork >= 0.4
 BuildRequires:	npm
 BuildRequires:	rpmbuild(macros) >= 1.634
 BuildRequires:	sed >= 4.0
 Requires:	nodejs
 #Requires:	nodejs-broadway >= 0.1
 #Requires:	nodejs-cliff >= 0
-#Requires:	nodejs-daemon >= 0.5
+Requires:	nodejs-daemon >= 0.5
 #Requires:	nodejs-flatiron >= 0.1
-#Requires:	nodejs-microtime >= 0.2
+Requires:	nodejs-microtime >= 0.2
 #Requires:	nodejs-minimatch >= 0.2
 #Requires:	nodejs-nconf >= 0.5
-#Requires:	nodejs-node-fork >= 0.4
+Requires:	nodejs-node-fork >= 0.4
 #Requires:	nodejs-nssocket >= 0.3
 #Requires:	nodejs-optimist >= 0.3
 #Requires:	nodejs-pkginfo >= 0
@@ -29,11 +32,8 @@ Requires:	nodejs
 #Requires:	nodejs-utile >= 0.0
 #Requires:	nodejs-watch >= 0.5
 #Requires:	nodejs-winston >= 0.5
-#BuildArch:	noarch
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-# redefine for arch specific dir (daemon, microtime, node-fork modules are not noarch)
-%define		nodejs_libdir	%{_libdir}/node
 
 %description
 A simple CLI tool for ensuring that a given script runs continuously
@@ -51,6 +51,11 @@ mv package/* .
 find '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
 
 %build
+# arch specific packages
+npm link daemon
+npm link node-fork
+npm link microtime
+# install others local
 npm install .
 
 %install
